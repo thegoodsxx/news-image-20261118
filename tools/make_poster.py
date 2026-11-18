@@ -288,7 +288,7 @@ def create_poster() -> Image.Image:
     date_w = f_date.getlength(date_text)
     date_x = margin_x + (usable_width - date_w) / 2
     draw.text((date_x, y), date_text, font=f_date, fill=COLOR_INK)
-    y += 82
+    y += 80
 
     # Bottom masthead double rules
     draw.line([(margin_x, y), (right_x, y)], fill=COLOR_INK, width=3)
@@ -344,7 +344,7 @@ def create_poster() -> Image.Image:
     col_width = (usable_width - col_gap) // 2  # ~459px
     col0_x = margin_x
     col1_x = margin_x + col_width + col_gap
-    row_height = 166
+    row_height = 152
 
     panels_data = [
         # (row, col, kicker, headline, sub, icon_drawer)
@@ -368,7 +368,7 @@ def create_poster() -> Image.Image:
 
     for r, c, kicker, headline, sub, icon_func in panels_data:
         px = col0_x if c == 0 else col1_x
-        py = grid_start_y + r * (row_height + 12)
+        py = grid_start_y + r * (row_height + 10)
 
         # Draw icon in top-right of panel
         icon_x = px + col_width - icon_size
@@ -377,20 +377,20 @@ def create_poster() -> Image.Image:
 
         # Draw kicker
         draw.text((px, py + 2), kicker, font=f_panel_kicker, fill=COLOR_RED)
-        cur_y = py + 22
+        cur_y = py + 20
 
         # Draw headline (left of icon)
         head_lines = wrap_text(headline, f_panel_head, head_max_w)
         for hl in head_lines:
             draw.text((px, cur_y), hl, font=f_panel_head, fill=COLOR_INK)
             cur_y += 31
-        cur_y += 8
+        cur_y += 6
 
         # Draw sub (spanning full width below headline and icon)
         sub_lines = wrap_text(sub, f_panel_sub, col_width - 8)
         for sl in sub_lines:
             draw.text((px, cur_y), sl, font=f_panel_sub, fill=COLOR_SUB)
-            cur_y += 22
+            cur_y += 21
 
     # Vertical divider line between columns
     grid_end_y = grid_start_y + 2 * row_height + 10
@@ -403,7 +403,7 @@ def create_poster() -> Image.Image:
     draw.line([(col1_x, mid_row_y), (col1_x + col_width, mid_row_y)], fill=COLOR_RULE, width=1)
 
     # Divider below grid
-    y = grid_end_y + 10
+    y = grid_end_y + 8
     draw.line([(margin_x, y), (right_x, y)], fill=COLOR_RULE, width=1)
     y += 10
 
@@ -411,19 +411,23 @@ def create_poster() -> Image.Image:
     # 4. FULL-WIDTH STRIP
     # ==========================================
     strip_y = y
-    draw.text((margin_x, strip_y), "AMERICAS · HEALTH", font=f_panel_kicker, fill=COLOR_RED)
-    strip_y += 18
 
+    # Line 1: Kicker on its own line
+    draw.text((margin_x, strip_y), "AMERICAS · HEALTH", font=f_panel_kicker, fill=COLOR_RED)
+    strip_y += 20
+
+    # Line 2: Headline on the next line
     f_strip_head = get_font(FONT_BOLD_PATH, 25)
     draw.text((margin_x, strip_y), "US LOSES MEASLES-FREE STATUS", font=f_strip_head, fill=COLOR_INK)
+    strip_y += 30
 
+    # Line 3: Sub on its own line BELOW the headline
     f_strip_sub = get_font(FONT_REGULAR_PATH, 17)
     strip_sub_text = "Elimination status ends after 26 years amid a record outbreak"
-    sub_w = f_strip_sub.getlength(strip_sub_text)
-    draw.text((right_x - sub_w, strip_y + 5), strip_sub_text, font=f_strip_sub, fill=COLOR_SUB)
+    draw.text((margin_x, strip_y), strip_sub_text, font=f_strip_sub, fill=COLOR_SUB)
 
-    # Divider below strip
-    y = strip_y + 34
+    # Divider below strip (fully frames the strip before the ticker)
+    y = strip_y + 24
     draw.line([(margin_x, y), (right_x, y)], fill=COLOR_RULE, width=1)
     y += 10
 
@@ -453,7 +457,7 @@ def create_poster() -> Image.Image:
     # Line 1
     draw.text((tx, t_y1), line1_bold_part, font=f_ticker_bold, fill=COLOR_WHITE)
     bold_part_w = f_ticker_bold.getlength(line1_bold_part)
-    draw.text((tx + bold_part_w, t_y1), line1_body_part, font=f_ticker_reg, fill=COLOR_WHITE)
+    draw.text((tx + bold_part_w + 2, t_y1), line1_body_part, font=f_ticker_reg, fill=COLOR_WHITE)
 
     # Line 2
     draw.text((tx, t_y2), line2_text, font=f_ticker_reg, fill=COLOR_WHITE)
